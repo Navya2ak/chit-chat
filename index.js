@@ -1,12 +1,14 @@
 const express = require("express");
 const {Ollama} = require("ollama");
 const ollama=new Ollama();
+
+const mongoose=require("mongoose");
+ mongoose.connect("mongodb+srv://mailnavyaraj_db_user:passw0rd@clusteraz.3umfliz.mongodb.net/?appName=ClusterAZ")
+.then(()=>console.log("mongodb connected"))
+.catch((error)=>console.log("error occurred during the mongodb connection",error));
+
 const app = express();
 app.use(express.json())
-app.get("/", (req, res) => {
-  res.send("ok");
-});
-
 
 app.post("/", async (req, res) => {
   let query = req.body.content;
