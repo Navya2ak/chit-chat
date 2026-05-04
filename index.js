@@ -1,8 +1,16 @@
 const express = require("express");
-const chatService = require("./chat/chat.service");
 const chatRouter=require("./chat/chat.router")
 const mongoose=require("mongoose");
- mongoose.connect("mongodb://mailnavyaraj_db_user:passw0rd@ac-zwqzgyy-shard-00-00.3umfliz.mongodb.net:27017,ac-zwqzgyy-shard-00-01.3umfliz.mongodb.net:27017,ac-zwqzgyy-shard-00-02.3umfliz.mongodb.net:27017/?ssl=true&replicaSet=atlas-13hksb-shard-0&authSource=admin&appName=ClusterAZ")
+
+process.loadEnvFile();
+
+const DB_URL=process.env.MONGO_DB_URL;
+
+if (!DB_URL) {
+  throw new Error("MONGO_DB_URL is missing in .env");
+}
+
+mongoose.connect(DB_URL)
 .then(()=>console.log("mongodb connected"))
 .catch((error)=>console.log("error occurred during the mongodb connection",error));
 
