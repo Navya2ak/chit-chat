@@ -1,34 +1,14 @@
 const express = require("express");
-const {Ollama} = require("ollama");
-const ollama=new Ollama();
-
+const chatService = require("./chat/chat.service");
+const chatRouter=require("./chat/chat.router")
 const mongoose=require("mongoose");
- mongoose.connect("mongodb+srv://mailnavyaraj_db_user:passw0rd@clusteraz.3umfliz.mongodb.net/?appName=ClusterAZ")
+ mongoose.connect("mongodb://mailnavyaraj_db_user:passw0rd@ac-zwqzgyy-shard-00-00.3umfliz.mongodb.net:27017,ac-zwqzgyy-shard-00-01.3umfliz.mongodb.net:27017,ac-zwqzgyy-shard-00-02.3umfliz.mongodb.net:27017/?ssl=true&replicaSet=atlas-13hksb-shard-0&authSource=admin&appName=ClusterAZ")
 .then(()=>console.log("mongodb connected"))
 .catch((error)=>console.log("error occurred during the mongodb connection",error));
 
 const app = express();
 app.use(express.json())
-
-app.post("/", async (req, res) => {
-  let query = req.body.content;
-  let response=await chat(query);
-  res.send(response.message.content)
-});
-
-
+app.use(chatRouter)
 app.listen(3000, () => {
   console.log("app listening port 3000");
 });
-
-async function chat(query) {
-  const response = await ollama.chat({
-    model: "llama3.2",
-    messages: [
-      { role: "system", content: "You are a helpful support assistant" },
-      { role: "user", content: query },
-    ],
-  });
-  console.log(response)
-  return response;
-}
