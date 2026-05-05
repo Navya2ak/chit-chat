@@ -6,20 +6,18 @@ const ollama = new Ollama();
 const chatService = {
   async insertChat(message) {
     const { sessionId, role, content } = message;
-try{
-    const newChat = new ChatHistory({
-      sessionId,
-      role,
-      content,
-      createdAt: new Date(),
-    });
+    try {
+      const newChat = new ChatHistory({
+        sessionId,
+        role,
+        content,
+        createdAt: new Date(),
+      });
 
-    return newChat.save();
-  }
-  catch(error){
-    console.log("error",error);
-    
-  }
+      return newChat.save();
+    } catch (error) {
+      console.log("error", error);
+    }
   },
   async chat(messages) {
     const userMessage =
@@ -29,7 +27,9 @@ try{
 
     await this.insertChat(userMessage);
 
-    const query = userMessage.sessionId ? { sessionId: userMessage.sessionId } : {};
+    const query = userMessage.sessionId
+      ? { sessionId: userMessage.sessionId }
+      : {};
     const chatMessages = await ChatHistory.find(query)
       .sort({ createdAt: 1 })
       .select("role content -_id")
